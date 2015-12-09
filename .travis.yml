@@ -9,7 +9,7 @@ before_install:
       echo "Only docs were updated, stopping build process."
       exit
     fi
-    npm install mocha babel -g
+    npm install mocha babel-cli -g
     mocha --version & babel --version
 script:
 - |
