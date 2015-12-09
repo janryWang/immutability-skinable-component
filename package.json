@@ -29,7 +29,7 @@
   },
   "homepage": "https://github.com/janryWang/immutability-skinable-component#readme",
   "dependencies": {
-    "immutability": "^0.0.x"
+    "immutability": "^1.0.x"
   },
   "devDependencies": {
     "babel-core": "^6.1.x",

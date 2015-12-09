@@ -119,7 +119,7 @@ function Skinable(SkinMakerInstance) {
 		if (isFunc(SkinMakerInstance._createSkin)) {
 			_class_ = SkinMakerInstance._createSkin(_class_);
 		}
-		IBDecorator(_class_);
+		_class_ = IBDecorator(_class_);
 		return _class_;
 	}
 }
