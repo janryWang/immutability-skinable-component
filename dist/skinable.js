@@ -99,7 +99,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		_createClass(SkinMaker, [{
 			key: 'registerSkins',
 			value: function registerSkins(skins) {
-				this.skins = union(skins.concat(['default'])) || [];
+				skins = toArray(skins);
+				this.skins = union(skins.concat('default'));
 				this.skinWidgets = {};
 				return this;
 			}
@@ -119,7 +120,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				var self = this;
 				return {
 					injectSkins: function injectSkins() {
-						self.skins = flatten(toArray(arguments));
+						self.skins = union(flatten(toArray(arguments)).concat('default'));
 					},
 					injectWidgets: function injectWidgets(name, skins) {
 						if (isStr(name)) {

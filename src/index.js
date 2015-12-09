@@ -14,7 +14,8 @@ class SkinMaker {
 	}
 
 	registerSkins(skins) {
-		this.skins = union(skins.concat(['default'])) || [];
+		skins = toArray(skins);
+		this.skins = union(skins.concat('default'));
 		this.skinWidgets = {};
 		return this;
 	}
@@ -32,7 +33,7 @@ class SkinMaker {
 		let self = this;
 		return {
 			injectSkins(){
-				self.skins = flatten(toArray(arguments));
+				self.skins = union(flatten(toArray(arguments)).concat('default'));
 			},
 			injectWidgets(name, skins){
 				if (isStr(name)) {
