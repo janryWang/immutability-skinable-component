@@ -1,3 +1,20 @@
 language: node_js
 node_js:
 - v4.2.1
+
+before_install:
+- |
+    if ! git diff --name-only $TRAVIS_COMMIT_RANGE | grep -qvE '(\.md$)|(^(docs|examples))/'
+    then
+      echo "Only docs were updated, stopping build process."
+      exit
+    fi
+    npm install mocha babel -g
+    mocha --version & babel --version
+script:
+- |
+    if [ "$TEST_TYPE" = test ]; then
+      npm test
+    else
+      npm run $TEST_TYPE
+    fi
