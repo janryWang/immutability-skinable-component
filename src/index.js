@@ -1,6 +1,6 @@
 import utils from './utils';
 import React from 'react';
-const {IBDecorator,extend,getProto,types,toArray,flatten,intersection,hasOwnProp,union} = utils;
+const {IBDecorator,extend,getProto,types,toArray,flatten,intersection,hasOwnProp,union,deepExtend} = utils;
 
 const {isFunc,isStr,isObj} = types;
 
@@ -33,14 +33,16 @@ class SkinMaker {
 		let self = this;
 		return {
 			injectSkins(){
-				self.skins = union(flatten(toArray(arguments)).concat('default'));
+				self.skins = union(flatten(toArray(arguments).concat(self.skins)));
+				return this;
 			},
 			injectWidgets(name, skins){
 				if (isStr(name)) {
 					self.skinWidgets[name] = skins || {};
 				} else if (isObj(name)) {
-					extend(self.skinWidgets, name);
+					deepExtend(self.skinWidgets, name);
 				}
+				return this;
 			}
 		}
 	}
@@ -88,7 +90,6 @@ class SkinMaker {
 
 					context.skinWidgets[name] = newWdiget || defaultSkin;
 				} else if(isObj(widget)){
-					console.log(currentSkins);
 					newWdiget = currentSkins.reduce((tmp,skinName)=>{
 						if(!tmp && isFunc(widget[skinName])){
 							try{

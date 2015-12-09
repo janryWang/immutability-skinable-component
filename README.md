@@ -102,4 +102,63 @@ render(){
 
 ```
 
+##使用教程
+
+###安装
+
+```
+npm install --save immutability-skinable-component
+
+```
+
+###入门
+
+组件定义
+
+```
+
+import Skinable from 'immutability-skinable-component';
+import React,{Component} from 'react';
+
+const skins = Skinable.createSkins('large','middle','small').createWidgets({
+	Button:{
+		default(props){
+			let buttonClass = `${this.props.prefixCls}-default button`;
+			let {ButtonIcon} = this.skinWidgets;
+			return <a className={buttonClass}/><ButtonIcon />{this.props.buttonText}</a>
+		}
+	},
+	ButtonIcon:{
+		default(props){
+			let buttonIconClass = `${this.props.prefixCls}-default button-icon arrow`
+			return <i className={buttonIconClass}></i>
+		}
+	}
+});
+
+@Skinable() class Button extends Component {
+	render(){
+		let {Button} = this.skinWidgets;
+		return <Button/>
+	}
+
+}
+
+
+
+```
+
+组件使用
+
+```
+ReactDOM.render(
+	<Button default/>,
+	document.body
+);
+
+```
+
+
+
+
 ##Q/A

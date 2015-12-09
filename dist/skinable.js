@@ -83,6 +83,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var intersection = _utils2.default.intersection;
 	var hasOwnProp = _utils2.default.hasOwnProp;
 	var union = _utils2.default.union;
+	var deepExtend = _utils2.default.deepExtend;
 	var isFunc = types.isFunc;
 	var isStr = types.isStr;
 	var isObj = types.isObj;
@@ -120,14 +121,16 @@ return /******/ (function(modules) { // webpackBootstrap
 				var self = this;
 				return {
 					injectSkins: function injectSkins() {
-						self.skins = union(flatten(toArray(arguments)).concat('default'));
+						self.skins = union(flatten(toArray(arguments).concat(self.skins)));
+						return this;
 					},
 					injectWidgets: function injectWidgets(name, skins) {
 						if (isStr(name)) {
 							self.skinWidgets[name] = skins || {};
 						} else if (isObj(name)) {
-							extend(self.skinWidgets, name);
+							deepExtend(self.skinWidgets, name);
 						}
+						return this;
 					}
 				};
 			}
@@ -181,7 +184,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 								context.skinWidgets[name] = newWdiget || defaultSkin;
 							} else if (isObj(widget)) {
-								console.log(currentSkins);
 								newWdiget = currentSkins.reduce(function (tmp, skinName) {
 									if (!tmp && isFunc(widget[skinName])) {
 										try {
@@ -244,7 +246,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var isArr = _immutability2.default.utils.types.isArr;
+	var _IBDecorator$utils = _immutability2.default.utils;
+	var types = _IBDecorator$utils.types;
+	var toArray = _IBDecorator$utils.toArray;
+	var isArr = types.isArr;
+	var isObj = types.isObj;
+
+	var isRef = function isRef(val) {
+		return isArr(val) || isObj(val);
+	};
 
 	function flatten(arr) {
 		if (isArr(arr)) {
@@ -258,6 +268,32 @@ return /******/ (function(modules) { // webpackBootstrap
 			}, []);
 		} else {
 			return arr;
+		}
+	}
+
+	function deepExtend() {
+		var args = toArray(arguments),
+		    argLength;
+		argLength = args.length;
+		if (argLength == 1) {
+			return args[0];
+		} else if (argLength == 2) {
+			if (isRef(args[0])) {
+				for (var name in args[1]) {
+					if (hasOwnProp(args[1], name)) {
+						if (isRef(args[1][name]) && isRef(args[0][name])) {
+							deepExtend(args[0][name], args[1][name]);
+						} else {
+							args[0][name] = args[1][name];
+						}
+					}
+				}
+				return args[0];
+			} else {
+				return args[0];
+			}
+		} else if (argLength > 2) {
+			return deepExtend(args[0], deepExtend.apply(null, args.slice(1)));
 		}
 	}
 
@@ -291,6 +327,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		IBDecorator: _immutability2.default,
 		union: union,
 		flatten: flatten,
+		deepExtend: deepExtend,
 		intersection: intersection,
 		hasOwnProp: hasOwnProp
 	});
