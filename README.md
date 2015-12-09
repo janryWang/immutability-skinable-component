@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/janryWang/immutability.svg)](https://travis-ci.org/janryWang/immutability)
+
 immutability-skinable-component
 ===
 
