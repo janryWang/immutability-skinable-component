@@ -41,6 +41,7 @@
     "babel-preset-stage-0": "^6.1.x",
     "chai": "^3.4.x",
     "jsdom": "^7.0.x",
+    "istanbul": "^0.4.1",
     "mocha": "^2.3.x",
     "react-addons-test-utils": "^0.14.x",
     "react-dom": "^0.14.x",
