@@ -1,4 +1,6 @@
+[![NPM version][npm-image]][npm-url]
 [![Build Status](https://travis-ci.org/janryWang/immutability.svg)](https://travis-ci.org/janryWang/immutability)
+[![Test coverage][coveralls-image]][coveralls-url]
 
 immutability-skinable-component
 ===

@@ -10,6 +10,8 @@
     "build:umd": "webpack src/index.js dist/skinable.js --config webpack.config.development.js",
     "build:umd:min": "webpack src/index.js dist/skinable.min.js --config webpack.config.production.js",
     "build": "npm run build:lib && npm run build:umd && npm run build:umd:min",
+    "cover": "istanbul cover _mocha -- -u exports --compilers js:babel/register -R spec",
+    "coveralls": "NODE_ENV=test istanbul cover _mocha --report lcovonly -- -u exports --compilers js:babel/register -R spec && cat coverage/lcov.info | coveralls",
     "prepublish": "npm run build"
   },
   "repository": {
