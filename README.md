@@ -1,6 +1,6 @@
-[![NPM version][npm-image]][npm-url]
+[![npm version](https://badge.fury.io/js/immutability-skinable-component@2x.png)](https://badge.fury.io/js/immutability-skinable-component)
 [![Build Status](https://travis-ci.org/janryWang/immutability.svg)](https://travis-ci.org/janryWang/immutability)
-[![Test coverage][coveralls-image]][coveralls-url]
+[![Coverage Status](https://coveralls.io/repos/janryWang/immutability-skinable-component/badge.svg?branch=master&service=github)](https://coveralls.io/github/janryWang/immutability-skinable-component?branch=master)
 
 immutability-skinable-component
 ===
