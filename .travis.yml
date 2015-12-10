@@ -1,7 +1,7 @@
 sudo: required
 language: node_js
 node_js:
-- v4.2.1
+- "v4"
 
 before_install:
 - |
