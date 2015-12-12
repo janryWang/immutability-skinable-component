@@ -152,7 +152,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				}
 				TmpClass.prototype = getProto(_class_);
 				extend(getProto(TmpClass), this._createMixins());
-				extend(TmpClass, this._createStatics());
+				extend(TmpClass, _class_, this._createStatics());
 				return TmpClass;
 			}
 		}, {
@@ -174,7 +174,7 @@ return /******/ (function(modules) { // webpackBootstrap
 							var newWdiget = undefined;
 							if (isFunc(widget)) {
 								try {
-									newWdiget = widget.call(context, currentSkins, oldWidget);
+									newWdiget = widget.call(currentSkins, oldWidget);
 									if (_react2.default.isValidElement(newWdiget)) {
 										newWdiget = widget.bind(context);
 									}
