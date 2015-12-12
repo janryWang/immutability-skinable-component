@@ -80,12 +80,12 @@ class SkinMaker {
 				let newWdiget;
 				if(isFunc(widget)){
 					try{
-						newWdiget = widget(currentSkins,oldWidget);
+						newWdiget = widget.call(context,currentSkins,oldWidget);
 						if(React.isValidElement(newWdiget)){
-							newWdiget = widget;
+							newWdiget = widget.bind(context);
 						}
 					}catch(e){
-						newWdiget = widget;
+						newWdiget = widget.bind(context);
 					}
 
 					context.skinWidgets[name] = newWdiget || defaultSkin;
@@ -93,12 +93,12 @@ class SkinMaker {
 					newWdiget = currentSkins.reduce((tmp,skinName)=>{
 						if(!tmp && isFunc(widget[skinName])){
 							try{
-								tmp = widget[skinName](currentSkins,oldWidget);
+								tmp = widget[skinName].call(context,currentSkins,oldWidget);
 								if(React.isValidElement(tmp)){
-									tmp = widget[skinName];
+									tmp = widget[skinName].bind(context);
 								}
 							}catch(e){
-								tmp = widget;
+								tmp = widget.bind(context);
 							}
 						}
 						return tmp;

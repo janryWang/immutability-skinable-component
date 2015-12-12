@@ -15,6 +15,9 @@ window.document.body.appendChild(root);
 describe('test api', function () {
 
 	class TestComponent extends Component {
+
+
+
 		render() {
 			let {Container,Body,Header,Footer} = this.skinWidgets;
 			return (
@@ -31,6 +34,10 @@ describe('test api', function () {
 
 	skins.createWidgets('Header', {
 		default(){
+			let self = this;
+			it('context need to equal current component context',()=>{
+				self.should.to.have.property('getState');
+			});
 			return <div className="header">I am a default skin header</div>
 		},
 		large(){
