@@ -211,7 +211,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function Skinable(SkinMakerInstance) {
 		return function (_class_) {
-			if (isFunc(SkinMakerInstance._createSkin)) {
+			if (SkinMakerInstance && isFunc(SkinMakerInstance._createSkin)) {
 				_class_ = SkinMakerInstance._createSkin(_class_);
 			}
 			_class_ = IBDecorator(_class_);
