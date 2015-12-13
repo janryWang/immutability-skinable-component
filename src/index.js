@@ -6,6 +6,7 @@ const {isFunc,isStr,isObj} = types;
 
 const EVENT_CONSTRUCTOR = 'EVENT_CONSTRUCTOR';
 
+const haveSkin = function (val) { return this.indexOf(val) !== -1};
 
 class SkinMaker {
 
@@ -53,16 +54,18 @@ class SkinMaker {
 
 	_createSkin(_class_) {
 		let self = this;
-		function TmpClass () {
+
+		function TmpClass() {
 			let args = toArray(arguments);
 			let injectArgs = [this].concat(args);
 			this.skinWidgets = {};
 			self._initWidgets.apply(self, injectArgs);
 			return _class_.apply(this, args);
 		}
+
 		TmpClass.prototype = getProto(_class_);
 		extend(getProto(TmpClass), this._createMixins());
-		extend(TmpClass, _class_,this._createStatics());
+		extend(TmpClass, _class_, this._createStatics());
 		return TmpClass;
 	}
 
@@ -70,41 +73,35 @@ class SkinMaker {
 		context.props = props;
 		let skinWidgets = this.skinWidgets;
 		let propsKeys = union(Object.keys(context.props).concat(['default']));
-		let currentSkins = intersection(propsKeys,this.skins);
+		let currentSkins = intersection(propsKeys, this.skins);
 		let defaultSkin = props => <noscripts/>;
+		let getElementCreator = (Widget, oldWidget)=> {
+			return (...args)=>{
+				currentSkins.haveSkin = haveSkin;
+				args[0] = {
+					...args[0],
+					currentSkins,
+					oldWidget
+				};
+				args.push(currentSkins);
+				args.push(oldWidget);
+				return Widget.apply(context,args);
+			};
+		};
 
 		for (let name in skinWidgets) {
-			if (hasOwnProp(skinWidgets,name)) {
+			if (hasOwnProp(skinWidgets, name)) {
 				let widget = skinWidgets[name];
 				let oldWidget = context.skinWidgets[name];
-				let newWdiget;
-				if(isFunc(widget)){
-					try{
-						newWdiget = widget.call(currentSkins,oldWidget);
-						if(React.isValidElement(newWdiget)){
-							newWdiget = widget.bind(context);
-						}
-					}catch(e){
-						newWdiget = widget.bind(context);
-					}
-
-					context.skinWidgets[name] = newWdiget || defaultSkin;
-				} else if(isObj(widget)){
-					newWdiget = currentSkins.reduce((tmp,skinName)=>{
-						if(!tmp && isFunc(widget[skinName])){
-							try{
-								tmp = widget[skinName].call(context,currentSkins,oldWidget);
-								if(React.isValidElement(tmp)){
-									tmp = widget[skinName].bind(context);
-								}
-							}catch(e){
-								tmp = widget.bind(context);
+				if (isFunc(widget)) {
+					context.skinWidgets[name] = getElementCreator(widget, oldWidget) || defaultSkin;
+				} else if (isObj(widget)) {
+					context.skinWidgets[name] = currentSkins.reduce((tmp, skinName)=> {
+							if (!tmp && isFunc(widget[skinName])) {
+								tmp = getElementCreator(widget[skinName], oldWidget);
 							}
-						}
-						return tmp;
-					},false);
-
-					context.skinWidgets[name] = newWdiget|| defaultSkin;
+							return tmp;
+						}, false) || defaultSkin;
 				}
 			}
 		}

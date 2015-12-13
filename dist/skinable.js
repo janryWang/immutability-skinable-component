@@ -56,6 +56,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 	Object.defineProperty(exports, "__esModule", {
@@ -89,6 +91,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	var isObj = types.isObj;
 
 	var EVENT_CONSTRUCTOR = 'EVENT_CONSTRUCTOR';
+
+	var haveSkin = function haveSkin(val) {
+		return this.indexOf(val) !== -1;
+	};
 
 	var SkinMaker = (function () {
 		function SkinMaker(skins) {
@@ -143,6 +149,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			key: '_createSkin',
 			value: function _createSkin(_class_) {
 				var self = this;
+
 				function TmpClass() {
 					var args = toArray(arguments);
 					var injectArgs = [this].concat(args);
@@ -150,6 +157,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					self._initWidgets.apply(self, injectArgs);
 					return _class_.apply(this, args);
 				}
+
 				TmpClass.prototype = getProto(_class_);
 				extend(getProto(TmpClass), this._createMixins());
 				extend(TmpClass, _class_, this._createStatics());
@@ -165,40 +173,37 @@ return /******/ (function(modules) { // webpackBootstrap
 				var defaultSkin = function defaultSkin(props) {
 					return _react2.default.createElement('noscripts', null);
 				};
+				var getElementCreator = function getElementCreator(Widget, oldWidget) {
+					return function () {
+						for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+							args[_key] = arguments[_key];
+						}
+
+						currentSkins.haveSkin = haveSkin;
+						args[0] = _extends({}, args[0], {
+							currentSkins: currentSkins,
+							oldWidget: oldWidget
+						});
+						args.push(currentSkins);
+						args.push(oldWidget);
+						return Widget.apply(context, args);
+					};
+				};
 
 				for (var name in skinWidgets) {
 					if (hasOwnProp(skinWidgets, name)) {
 						(function () {
 							var widget = skinWidgets[name];
 							var oldWidget = context.skinWidgets[name];
-							var newWdiget = undefined;
 							if (isFunc(widget)) {
-								try {
-									newWdiget = widget.call(currentSkins, oldWidget);
-									if (_react2.default.isValidElement(newWdiget)) {
-										newWdiget = widget.bind(context);
-									}
-								} catch (e) {
-									newWdiget = widget.bind(context);
-								}
-
-								context.skinWidgets[name] = newWdiget || defaultSkin;
+								context.skinWidgets[name] = getElementCreator(widget, oldWidget) || defaultSkin;
 							} else if (isObj(widget)) {
-								newWdiget = currentSkins.reduce(function (tmp, skinName) {
+								context.skinWidgets[name] = currentSkins.reduce(function (tmp, skinName) {
 									if (!tmp && isFunc(widget[skinName])) {
-										try {
-											tmp = widget[skinName].call(context, currentSkins, oldWidget);
-											if (_react2.default.isValidElement(tmp)) {
-												tmp = widget[skinName].bind(context);
-											}
-										} catch (e) {
-											tmp = widget.bind(context);
-										}
+										tmp = getElementCreator(widget[skinName], oldWidget);
 									}
 									return tmp;
-								}, false);
-
-								context.skinWidgets[name] = newWdiget || defaultSkin;
+								}, false) || defaultSkin;
 							}
 						})();
 					}

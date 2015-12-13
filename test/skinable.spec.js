@@ -23,7 +23,7 @@ describe('test api', function () {
 			return (
 				<Container>
 					<Header/>
-					<Body/>
+					<Body text="this is props text"/>
 					<Footer/>
 				</Container>
 			);
@@ -49,18 +49,14 @@ describe('test api', function () {
 				return <div className="footer">I am a default skin footer</div>
 			},
 			large(){
-				return ()=> {
-					return <div className="footer">I am a large skin footer</div>
-				}
+				return <div className="footer">I am a large skin footer</div>
 			}
 		},
-		Body(skinNames){
-			return ()=> {
-				if (skinNames.indexOf('large') !== -1) {
-					return <div className="body">I am a large skin body</div>
-				} else {
-					return <div className="body">I am a default skin body</div>
-				}
+		Body(props){
+			if (props.currentSkins.haveSkin('large')) {
+				return <div className="body">I am a large skin body {props.text}</div>
+			} else {
+				return <div className="body">I am a default skin body</div>
 			}
 		},
 		Container(props){
@@ -135,7 +131,11 @@ describe('test api', function () {
 
 				it('should equal I am a large skin body',()=>{
 					expect(bodyNode.innerHTML).to.have.string('I am a large skin body');
-				})
+				});
+
+				it('should have this is props text',()=>{
+					expect(bodyNode.innerHTML).to.have.string('this is props text');
+				});
 			}
 
 			render(){

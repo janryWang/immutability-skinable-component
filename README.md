@@ -55,8 +55,9 @@ let skins = skinable.registerSkins('large','middle','small','default')
 		return ...;
 	}
 }).createWidgets({//该模式可以解决多种皮肤组合使用的情景
-	button(skinNames){//skinName是一个数组
-	   if(skinNames.indexOf('default') !== -1){
+	button(props){//每个widget的props会被注入两个属性,一个是currentSkins(Array),一个是oldWidget(Functional Component)
+	   let {currentSkins,oldWidget} = props;
+	   if(currentSkins.haveSkin('default')){
 	   		return ....;
 	   }
 	}
@@ -65,10 +66,8 @@ let skins = skinable.registerSkins('large','middle','small','default')
 		default(props){
 		
 		},
-		large(skinNames,widget){//这里有一个黑魔法，如果你返回的是一个高阶函数，则第一级参数则会传一个skinNames和widget给你，如果仅仅只是一阶函数，则会把它当成一个纯函数组件，这个特性也是为了一个便捷性
-			return function(props){
+		large(props){
 			
-			}
 		}
 	}
 });
