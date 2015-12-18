@@ -89,10 +89,8 @@ class MyComponent extends Component {
 }
 
 MyComponent.injectSkins('mobile').injectWidgets('button',{
-	default:(skinNames,widget)=>{//这个skin是原来的defualt皮肤的widget,可以进行重用封装，也可以完全覆盖
-		return function(props){
-		
-		};
+	default:(props)=>{
+		let {currentSkins,oldWidget} = props;
 	}
 });
 
